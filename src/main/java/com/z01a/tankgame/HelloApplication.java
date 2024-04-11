@@ -1,5 +1,7 @@
 package com.z01a.tankgame;
 
+import com.z01a.engine.Engine;
+import com.z01a.engine.World;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -8,13 +10,19 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class HelloApplication extends Application {
+    private Engine m_Engine = null;
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 320, 240);
-        stage.setTitle("Hello!");
-        stage.setScene(scene);
-        stage.show();
+        m_Engine = new Engine(stage);
+        m_Engine.Initialize();
+        m_Engine.Start();
+    }
+
+    @Override
+    public void stop() throws Exception {
+        m_Engine.Stop();
+        m_Engine.UnInitialize();
+        m_Engine = null;
     }
 
     public static void main(String[] args) {
