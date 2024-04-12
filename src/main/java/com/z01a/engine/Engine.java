@@ -26,55 +26,37 @@ public class Engine {
         }
     }
 
-    private Stage m_Stage = null;
-
     private Loop m_Loop = null;
 
     private World m_World = null;
 
+    private StageManager m_StageManager = null;
     private InputManager m_InputManager = null;
     public Engine(Stage stage) {
-        m_Stage = stage;
-
         m_Loop = new Loop(this);
+
         m_World = new World();
+
         m_InputManager = new InputManager();
+        m_StageManager = new StageManager(stage);
     }
 
     public void Initialize() {
         m_World.Initialize();
-
-        Scene scene = new Scene(m_World.GetRoot(), 320, 240);
-
-        scene.addEventHandler(MouseEvent.ANY, new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                m_InputManager.Handle(mouseEvent);
-            }
-        });
-
-        scene.addEventHandler(KeyEvent.ANY, new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent keyEvent) {
-                m_InputManager.Handle(keyEvent);
-            }
-        });
-
-        m_Stage.setTitle("TankGame!");
-        m_Stage.setScene(scene);
-        m_Stage.show();
+        m_StageManager.Initialize();
+        m_InputManager.Initialize();
     }
 
     private void Update() {
-        System.out.println("Update!");
-//        m_InputManager.Update();
-//        m_World.Update();
+        m_World.Update();
+        m_StageManager.Update();
+        m_InputManager.Update();
     }
 
     public void UnInitialize() {
+        m_InputManager.UnInitialize();
+        m_StageManager.UnInitialize();
         m_World.UnInitialize();
-
-        m_Stage.close();
     }
 
     public void Start() {

@@ -4,18 +4,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 
 public class InputManager {
-    public void Handle(MouseEvent mouseEvent) {
-
-    }
-
-    public void Handle(KeyEvent keyEvent) {
-
-    }
-
-    enum InputAction
-    {
-        PlaceBall
-    }
 
     void Initialize()
     {
@@ -25,5 +13,8 @@ public class InputManager {
     void UnInitialize()
     {
 
+    }
+
+    public void Update() {
     }
 }
