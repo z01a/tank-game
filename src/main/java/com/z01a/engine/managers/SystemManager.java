@@ -1,16 +1,22 @@
-package com.z01a.ecs;
+package com.z01a.engine.managers;
+
+import com.z01a.ecs.Database;
+import com.z01a.ecs.System;
+import com.z01a.engine.Manager;
 
 import java.util.ArrayList;
 
-public class Scheduler {
+public class SystemManager implements Manager {
+    private final Database m_Database = new Database();
     private final ArrayList<System> m_Systems = new ArrayList<>();
 
     public <T extends System> void RegisterSystem(T system, Class<T> systemId)
     {
-        assert (!IsSystemRegistered(systemId)) : "[Scheduler::RegisterSystem] - System is already registered!";
+        assert (!IsSystemRegistered(systemId)) : "[SystemManager::RegisterSystem] - System is already registered!";
         m_Systems.add(system);
     }
 
+    @Override
     public void Update()
     {
         for (System system : m_Systems)
@@ -34,7 +40,7 @@ public class Scheduler {
 
     public <T extends System> void UnRegisterSystem(Class<T> systemId)
     {
-        assert (IsSystemRegistered(systemId)) : "[Scheduler::UnRegisterSystem] - System was not registered!";
+        assert (IsSystemRegistered(systemId)) : "[SystemManager::UnRegisterSystem] - System was not registered!";
 
         ArrayList<System> systemsToUnRegister = new ArrayList<>();
 
@@ -50,5 +56,13 @@ public class Scheduler {
         {
             m_Systems.remove(system);
         }
+    }
+
+    @Override
+    public void Initialize() {
+    }
+
+    @Override
+    public void UnInitialize() {
     }
 }

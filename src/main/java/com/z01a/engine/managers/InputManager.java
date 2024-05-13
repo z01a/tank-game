@@ -1,16 +1,16 @@
-package com.z01a.engine;
+package com.z01a.engine.managers;
 
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 
 public class InputManager {
 
-    void Initialize()
+    public void Initialize()
     {
 
     }
 
-    void UnInitialize()
+    public void UnInitialize()
     {
 
     }

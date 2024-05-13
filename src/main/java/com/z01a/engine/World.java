@@ -8,13 +8,10 @@ public class World {
 
     private Level m_Level = null;
 
-    private EntityManager m_EntityManager = null;
-
     public World()
     {
         m_Terrain = new Terrain();
         m_Level = new Level();
-        m_EntityManager = new EntityManager();
     }
 
     public void Initialize() {

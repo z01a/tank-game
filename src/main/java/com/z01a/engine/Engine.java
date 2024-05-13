@@ -1,17 +1,32 @@
 package com.z01a.engine;
 
+import com.z01a.engine.framework.Feature;
+import com.z01a.engine.framework.FeatureEdition;
+import com.z01a.engine.managers.FeatureManager;
+import com.z01a.engine.managers.InputManager;
+import com.z01a.engine.managers.SceneManager;
+import com.z01a.engine.managers.SystemManager;
+import com.z01a.engine.systems.ViewSystem;
+import com.z01a.tankgame.TankGame;
 import javafx.animation.AnimationTimer;
-import javafx.event.Event;
-import javafx.event.EventHandler;
-import javafx.event.EventType;
-import javafx.scene.Scene;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
-public class Engine {
+class EngineFeature extends Feature {
+    public EngineFeature(SystemManager systemManager) {
+        super(systemManager);
+    }
+
+    @Override
+    public void CollectSystems() {
+        GetSystemManager().RegisterSystem(new ViewSystem(), ViewSystem.class);
+    }
+}
+
+public class Engine extends FeatureEdition {
+    @Override
+    public void CollectFeatures() {
+        new EngineFeature(GetSystemManager()).CollectSystems();
+    }
 
     public class Loop extends AnimationTimer {
         private Engine m_Engine = null;
@@ -30,32 +45,42 @@ public class Engine {
 
     private World m_World = null;
 
-    private StageManager m_StageManager = null;
+    private Game m_Game = null;
+    private SceneManager m_SceneManager = null;
     private InputManager m_InputManager = null;
+    private SystemManager m_SystemManager = null;
     public Engine(Stage stage) {
+        super(new SystemManager());
+
         m_Loop = new Loop(this);
 
         m_World = new World();
 
         m_InputManager = new InputManager();
-        m_StageManager = new StageManager(stage);
+        m_SceneManager = new SceneManager(stage);
+
+        m_SystemManager = GetSystemManager();
+        m_Game = new TankGame(GetSystemManager());
     }
 
     public void Initialize() {
         m_World.Initialize();
-        m_StageManager.Initialize();
+        m_SceneManager.Initialize();
         m_InputManager.Initialize();
+        m_SystemManager.Initialize();
     }
 
     private void Update() {
         m_World.Update();
-        m_StageManager.Update();
+        m_SceneManager.Update();
         m_InputManager.Update();
+        m_SystemManager.Update();
     }
 
     public void UnInitialize() {
+        m_SystemManager.UnInitialize();
         m_InputManager.UnInitialize();
-        m_StageManager.UnInitialize();
+        m_SceneManager.UnInitialize();
         m_World.UnInitialize();
     }
 
