@@ -7,7 +7,7 @@ import java.util.HashSet;
 public class Database {
     private final HashSet<Long> m_Entities = new HashSet<>();
 
-    private final HashMap<Long, HashSet<Component>> m_Components = new HashMap<>();
+    private final HashMap<Long, HashSet<IComponent>> m_Components = new HashMap<>();
 
     public boolean IsValidEntity(long entity)
     {
@@ -20,10 +20,15 @@ public class Database {
 
         long id = Entity.Id++;
 
-        m_Entities.add(id);
-        m_Components.put(id, new HashSet<>());
+//        AddDelayedCommand(new CreateEntityCommand(id));
 
         return id;
+    }
+
+    protected void CreatePendingEntity(long id)
+    {
+        m_Entities.add(id);
+        m_Components.put(id, new HashSet<>());
     }
 
     public void DeleteEntity(long entity)
@@ -33,6 +38,13 @@ public class Database {
 
         m_Components.remove(entity);
         m_Entities.remove(entity);
+
+//        AddDelayedCommand(new DeleteEntityCommand(entity));
+    }
+
+    protected void DeletePendingEntity(long id)
+    {
+
     }
 
     public HashSet<Long> GetEntities()
@@ -42,7 +54,7 @@ public class Database {
         return m_Entities;
     }
 
-    public <T extends Component> void CreateComponent(long entity, T component, Class<T> componentId)
+    public <T extends IComponent> void CreateComponent(long entity, T component, Class<T> componentId)
     {
         assert (entity != Entity.Invalid) : "[Database::CreateComponent] - Invalid entity!";
         assert (m_Entities.contains(entity)) : "[Database::CreateComponent] - Entity doesn't exist!";
@@ -50,14 +62,16 @@ public class Database {
         assert (!HasComponent(entity, componentId)) : "[Database::CreateComponent] - Component is already added!";
 
         m_Components.get(entity).add(component);
+
+        //        AddDelayedCommand(new CreateComponentCommand(entity, component));
     }
 
-    public <T extends Component> boolean HasComponent(long entity, Class<T> componentId)
+    public <T extends IComponent> boolean HasComponent(long entity, Class<T> componentId)
     {
         assert (entity != Entity.Invalid) : "[Database::GetComponent] - Invalid entity!";
         assert (m_Entities.contains(entity)) : "[Database::GetComponent] - Entity doesn't exist!";
 
-        for (Component component : m_Components.get(entity))
+        for (IComponent component : m_Components.get(entity))
         {
             if (component.getClass().getName().equals(componentId.getName()))
             {
@@ -68,7 +82,7 @@ public class Database {
         return false;
     }
 
-    public <T extends Component> HashSet<Component> GetComponents(long entity)
+    public <T extends IComponent> HashSet<IComponent> GetComponents(long entity)
     {
         assert (entity == Entity.Invalid) : "[Database::GetComponents] - Invalid entity!";
         assert (m_Entities.contains(entity)) : "[Database::GetComponents] - Entity doesn't exist!";
@@ -76,12 +90,12 @@ public class Database {
         return m_Components.get(entity);
     }
 
-    public <T extends Component> T GetComponent(long entity, Class<T> componentId)
+    public <T extends IComponent> T GetComponent(long entity, Class<T> componentId)
     {
         assert (entity != Entity.Invalid) : "[Database::GetComponent] - Invalid entity!";
         assert (m_Entities.contains(entity)) : "[Database::GetComponent] - Entity doesn't exist!";
 
-        for (Component component : m_Components.get(entity))
+        for (IComponent component : m_Components.get(entity))
         {
             if (component.getClass().equals(componentId))
             {
@@ -92,14 +106,14 @@ public class Database {
         return null;
     }
 
-    public <T extends Component> void DeleteComponent(long entity, Class<T> componentId)
+    public <T extends IComponent> void DeleteComponent(long entity, Class<T> componentId)
     {
         assert (entity != Entity.Invalid) : "[Database::DeleteComponent] - Invalid entity!";
         assert (m_Entities.contains(entity)) : "[Database::DeleteComponent] - Entity doesn't exist!";
 
-        ArrayList<Component> componentsToDelete = new ArrayList<>();
+        ArrayList<IComponent> componentsToDelete = new ArrayList<>();
 
-        for (Component component : m_Components.get(entity))
+        for (IComponent component : m_Components.get(entity))
         {
             if (component.getClass().equals(componentId))
             {
@@ -107,7 +121,7 @@ public class Database {
             }
         }
 
-        for (Component component : componentsToDelete)
+        for (IComponent component : componentsToDelete)
         {
             m_Components.get(entity).remove(component);
         }

@@ -1,8 +1,8 @@
 package com.z01a.engine.systems;
 
-import com.z01a.ecs.System;
+import com.z01a.ecs.ISystem;
 
-public class ViewSystem implements System {
+public class ViewSystem implements ISystem {
     @Override
     public void Execute() {
 

@@ -1,4 +1,4 @@
-import com.z01a.ecs.Component;
+import com.z01a.ecs.IComponent;
 import com.z01a.ecs.Database;
 import junit.framework.Assert;
 import junit.framework.TestCase;
@@ -69,7 +69,7 @@ public class DatabaseTest extends TestCase {
     @DisplayName("Test simple component creation")
     void CreateComponents()
     {
-        class Position implements Component {
+        class Position implements IComponent {
             public double m_X, m_Y;
 
             public Position(double x, double y)
@@ -100,7 +100,7 @@ public class DatabaseTest extends TestCase {
     @DisplayName("Test simple component deletion")
     void DeleteComponents()
     {
-        class Position implements Component {
+        class Position implements IComponent {
             public double m_X, m_Y;
 
             public Position(double x, double y)
@@ -110,7 +110,7 @@ public class DatabaseTest extends TestCase {
             }
         }
 
-        class Velocity implements Component {
+        class Velocity implements IComponent {
             public double m_X, m_Y;
 
             public Velocity(double x, double y)
